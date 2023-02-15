@@ -1,47 +1,51 @@
+// imports always go at the top
+import LogInPage from './modules/LoginPage.js';
+import HomePage from './modules/HomePage.js';
+import ErrorPage from './modules/ErrorPage.js';
 
-//import your modules /components here
-import LoginPage from "./modules/LoginPage.js";
-import HomePage from "./modules/HomePage.js";
-import ErrorPage from "./modules/ErrorPage.js";
+const { createApp } = Vue; 
+// import the createApp method from the Vue library
 
-  
 const router = VueRouter.createRouter({
-    // 4. Provide the history implementation to use. We are using the hash history for simplicity here.
     history: VueRouter.createWebHashHistory(),
-    routes: [ //vue will try to match the following routs
-            //and render the approprite component onto the page
-        { 
-        path: '/', //the location bar url
-        name: 'login', // the name  of the route 
-        component: LoginPage // the component to render
-    
-    },
-    { 
-        path: '/home', //the location bar url
-        name: 'homme', // the name  of the route 
-        component: HomePage // the component to render
-    
-    },
-    { 
-        path: '/:pathMatch(.*)*', //the location bar url
-        name: 'error', // the name  of the route 
-        component: ErrorPage // the component to render
-    
-    }
+    routes: [
+        // 1 => the vue router will try to match these routes
+        // (this is what you put in the location bar in the browser)
 
-    ] // short for `routes: routes`
+        // 2 => when the router finds a match, vue will render the specified component
+        // into the router-view tag in index.html
+        { 
+            path: '/', // browser location bar looks like this
+            name: 'login', // name is for programmatic navigation
+            component: LogInPage // the component to render
+        },
+        { 
+            path: '/home', // browser location bar looks like this
+            name: 'home', // name is for programmatic navigation
+            component: HomePage // the component to render
+        },
+        // put a catch-all for broken routes at the very bottom of your routes stack
+        // if Vue Router can't match a given route, it'll display a generic error component
+        {
+            path: '/:pathMatch(.*)*', 
+            name: 'error', 
+            component: ErrorPage 
+        }
+    ]
   })
   
   // 5. Create and mount the root instance.
   const app = Vue.createApp({
-    method: {
-        tryRouterPush() {
-            this.$router.push({ name: 'home'})
+        methods: {
+            tryRouterPush() {
+                // programmatic routing 
+                this.$router.push({
+                    name: 'home'
+                })
+            }
         }
-    }
-  })
+  });
   // Make sure to _use_ the router instance to make the
   // whole app router-aware.
-  app.use(router)
-  
-  app.mount('#app')
+  app.use(router);  
+  app.mount('#app');
